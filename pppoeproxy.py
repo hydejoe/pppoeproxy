@@ -4,10 +4,10 @@ import subprocess
 
 def run():
     config=shell.get_config()
-    ret=subprocess.check_call(["pppoe-server","-I",config["listen"]])
-    pap=pppoeget.get_config(config["listen"])
-    template.write_conf(config["server"],pap["username"],pap["password"])
     try:
+        ret=subprocess.check_call(["pppoe-server","-I",config["listen"]])
+        pap=pppoeget.get_config(config["listen"])
+        template.write_conf(config["server"],pap["username"],pap["password"])
         ret=subprocess.check_call("/usr/sbin/pppoe-start")
         ret=subprocess.check_call(["systemctl","restart","dnsmasq"])
     finally:
