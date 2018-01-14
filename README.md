@@ -13,7 +13,10 @@ sudo python pppoeproxy.py -L <interface> -S <interface>
 
 ## Requirment
 
-pypcap,dpkt,pppoe
+``` bash
+sudo apt install pppoe libpcap-dev python-dev python-pip
+sudo pip install pypcap dpkt
+```
 
 ## 注意事项
 
