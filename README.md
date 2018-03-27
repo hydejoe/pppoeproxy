@@ -27,3 +27,9 @@ PPP_STD_OPTIONS="$PLUGIN_OPTS noipdefault noauth default-asyncmap $DEFAULTROUTE 
 ```
 
 找到"user $USER",删掉即可。项目代码里已有解决措施（具体在template.py）
+
+## TODO
+
+1.直接使用pon命令拨号
+
+2.装有NetworkManager的可使用nmcli进行拨号

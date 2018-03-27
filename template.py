@@ -130,11 +130,29 @@ RETRY_ON_FAILURE=no
 pap_secrets = """# Secrets for authentication using PAP
 # client	server	secret			IP addresses"""
 
-def write_conf(eth="", user="", password=""):
+pppoe_server_options = """require-pap
+login
+lcp-echo-interval 10
+lcp-echo-failure 2
+ms-dns 8.8.8.8
+ms-dns 8.8.4.4
+netmask 255.255.255.0
+defaultroute
+noipdefault
+usepeerdns
+mtu 1492
+"""
+
+
+def update_conf(eth="", user="", password=""):
     username = user.replace("\"", "\\\"")  # 防止出现双引号导致pppoe拨号时报错
-    with open("/etc/ppp/pppoe.conf", mode="wb") as f:
-        f.write("{conf}\nETH={eth}\nUSER='\"{user}\"'\n".format(conf=pppoe_conf, eth=eth, user=username).encode())
-    with open("/etc/ppp/pap-secrets", mode="wb") as f:
-        f.write('{conf}\n"{user}"\t*\t"{password}"'.format(conf=pap_secrets, user=username, password=password).encode())
-    with open("/etc/ppp/options",mode="wb") as f:
-        f.write('user "{user}"'.format(user=username).encode())
+    write_conf("{conf}\nETH={eth}\nUSER='\"{user}\"'\n".format(conf=pppoe_conf, eth=eth, user=username),
+               "/etc/ppp/pppoe.conf")
+    write_conf('{conf}\n"{user}"\t*\t"{password}"'.format(conf=pap_secrets, user=username, password=password),
+               "/etc/ppp/pap-secrets")
+    write_conf('user "{user}"'.format(user=username), "/etc/ppp/options")
+
+
+def write_conf(conf, path):
+    with open(path, mode="wb") as f:
+        f.write("{conf}".format(conf=conf).encode())
